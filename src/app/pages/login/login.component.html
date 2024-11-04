@@ -1,0 +1,10 @@
+<div>
+    <input type="text" [(ngModel)]="email" placeholder="Seu e-mail" />
+    <button (click)="sendEmailToken()">Envie-me o token!</button>
+
+</div>
+
+<div *ngIf="emailSent">
+    <input type="text" [(ngModel)]="token" placeholder="Digite o token aqui">
+    <button *ngIf="token" (click)="enter()">Entrar</button>
+</div>

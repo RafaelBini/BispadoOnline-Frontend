@@ -1,0 +1,31 @@
+<div>
+    <div>
+        <input type="text" [(ngModel)]="term" (ngModelChange)="reload()" />
+    </div>
+    <div class="container">
+        <table>
+            <tr>
+                <td (click)="orderBy('name')">Nome</td>
+                <td (click)="orderBy('lastSpeech')">Ultimo Discurso</td>
+                <td (click)="orderBy('minutes')">Tempo Ult. Disc.</td>
+                <td (click)="orderBy('speechesCount')">Count</td>
+            </tr>
+            <tr class="member" (click)="selectMember(membro)" *ngFor="let membro of membros">
+                <td>
+                    {{membro.name | memberName}} ({{membro.age}})
+                </td>
+                <td>
+                    {{membro.lastSpeech | fullDate}}
+                </td>
+                <td>
+                    <span *ngIf="membro.minutes">{{membro.minutes}} min</span>
+                </td>
+                <td>
+                    <span *ngIf="membro.speechesCount >= 1">{{membro.speechesCount}} vez<span
+                            *ngIf="membro.speechesCount > 1">es</span></span>
+                    <span *ngIf="membro.speechesCount <= 0">Nunca</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

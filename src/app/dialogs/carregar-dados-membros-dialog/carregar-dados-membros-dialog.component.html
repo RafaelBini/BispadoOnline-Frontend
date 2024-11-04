@@ -1,0 +1,17 @@
+<input type="text" [(ngModel)]="loginObj.churchUser" />
+<br>
+<input type="password" [(ngModel)]="loginObj.churchPass" />
+<br>
+<input type="numer" [(ngModel)]="loginObj.unitNumber" />
+
+<br>
+<br>
+
+<button (click)="requestLoad()">Carregar dados</button>
+
+<div class="result">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <div>
+        {{message}}
+    </div>
+</div>

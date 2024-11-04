@@ -1,0 +1,19 @@
+.container {
+    overflow: auto;
+    height: 400px;
+}
+
+.member {
+    background-color: aqua;
+    margin-top: 7px;
+}
+
+table {
+    border-collapse: collapse;
+
+}
+
+td {
+    padding: 10px;
+    border-top: 4px solid white;
+}

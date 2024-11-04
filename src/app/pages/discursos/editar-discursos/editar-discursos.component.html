@@ -1,0 +1,56 @@
+<div>
+    <div *ngFor="let sacramental of sacramentais" class="sacramental"
+        [class.sacramental_hoje]="isCurrentSacramental(sacramental)">
+        <div>
+            <h2>
+                {{sacramental.date | customDate}} - <span style="color: gray;">{{sacramental.sundayOfTheMonth}}º
+                    Domingo<span *ngIf="sacramental.sundayOfTheMonth == 1"> - TESTEMUNHOS</span></span>
+
+            </h2>
+        </div>
+
+        <div *ngIf="sacramental.speeches.length == 0">
+            <button mat-button (click)="addDefault(sacramental)">
+                Adicionar Default
+            </button>
+        </div>
+
+        <div *ngIf="sacramental.speeches.length > 0">
+            <div *ngFor="let speech of sacramental.speeches; index as speechIndex" class="speech">
+
+                <mat-checkbox [(ngModel)]="speech.isWildCard" (change)="updateSpeech(speech,'isWildCard')">
+                    {{speech.isWildCard ? 'Especial:' : 'Discursante:'}}
+                </mat-checkbox> <br>
+
+                <span *ngIf="!speech.isWildCard">
+                    <button (click)="buscarMembro(speech)" mat-button class="member_btn">
+                        {{speech.memberName || 'SelecionarMembro'}}
+                    </button>
+                </span>
+
+                <span *ngIf="speech.isWildCard">
+                    <input type="text" style="width: 280px;" placeholder="Texto livre"
+                        (change)="updateSpeech(speech,'wildText')" [(ngModel)]="speech.wildText" />
+                </span>
+
+                <input type="text" placeholder="Tema" (change)="updateSpeech(speech,'topic')"
+                    [(ngModel)]="speech.topic" />
+                <input type="text" placeholder="Referencia" (change)="updateSpeech(speech,'reference')"
+                    [(ngModel)]="speech.reference" />
+                <input type="number" placeholder="Tempo" (change)="updateSpeech(speech,'minutes')"
+                    [(ngModel)]="speech.minutes" />
+                <button mat-icon-button (click)="deleteSpeech(sacramental, speechIndex)" style="color: red;">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <button mat-button (click)="addBlankSpeech(sacramental)">
+                Adicionar Discurso
+            </button>
+        </div>
+
+
+    </div>
+</div>
