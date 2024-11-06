@@ -33,3 +33,12 @@ jobs:
           source: "dist/bispado-online-frontend/"
           target: /var/www/BispadoOnline-Frontend
           strip_components: 2
+
+      - name: Reiniciar o lighttpd
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.PROD_HOST }}
+          username: ${{ vars.PROD_HOST_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo systemctl restart lighttpd
