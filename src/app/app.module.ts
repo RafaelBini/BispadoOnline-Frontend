@@ -85,7 +85,8 @@ const CDK_MODULES = [
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
-    }
+    },
+    CustomDatePipe
   ],
   bootstrap: [AppComponent]
 })

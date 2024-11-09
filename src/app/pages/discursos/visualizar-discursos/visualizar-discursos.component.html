@@ -1,1 +1,36 @@
-<p>visualizar-discursos works!</p>
+<div *ngIf="loading" class="center">
+    <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="!loading">
+
+    <div class="center">
+        <select [(ngModel)]="domingoSelecionado" (ngModelChange)="reload()">
+            <option *ngFor="let domingo of domingos" [value]="domingo.id">
+                {{domingo.date | fullDate}}
+            </option>
+        </select>
+    </div>
+
+
+    <div class="container">
+        <div class="discurso" *ngFor="let discurso of speeches">
+            <div>
+                <div *ngIf="discurso.isWildCard"> <b> {{discurso.wildText}} </b></div>
+                <div *ngIf="!discurso.isWildCard"> <b> {{discurso.memberName | memberName}} </b></div>
+                <div *ngIf="discurso.topic">Tema: {{discurso.topic}}</div>
+                <div *ngIf="discurso.minutes">Tempo: {{discurso.minutes}} min</div>
+            </div>
+            <div *ngIf="discurso.topic" (click)="notifyCopy(discurso)" [cdkCopyToClipboard]="getInviteText(discurso)">
+                <mat-icon *ngIf="!discurso.messageCopied">
+                    content_copy
+                </mat-icon>
+                <mat-icon *ngIf="discurso.messageCopied">
+                    check_circle_outline
+                </mat-icon>
+            </div>
+
+        </div>
+    </div>
+
+</div>

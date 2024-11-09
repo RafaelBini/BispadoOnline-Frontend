@@ -1,0 +1,32 @@
+select {
+    padding: 10px;
+    width: 200px;
+    font-size: 21px;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+    border-radius: 7px;
+    background-color: whitesmoke;
+
+}
+
+.discurso {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.center {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

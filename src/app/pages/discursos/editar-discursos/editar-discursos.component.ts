@@ -116,7 +116,8 @@ export class EditarDiscursosComponent implements OnInit {
       topic: null,
       minutes: minutes,
       reference: null,
-      sacramentalId: sacramental.id
+      sacramentalId: sacramental.id,
+      messageCopied: false
     }
     try {
       var result = await this.http.post('speeches/add', speech);
