@@ -47,8 +47,8 @@ export class BuscarMembroDialogComponent implements OnInit {
     })
       .sort((a, b) => {
 
-        if (a[this.orderByField] == null) return (this.orderByDesc ? -1 : 1)
-        else if (b[this.orderByField] == null) return (this.orderByDesc ? 1 : -1)
+        if (a[this.orderByField] == null) return (this.orderByDesc ? 1 : -1)
+        else if (b[this.orderByField] == null) return (this.orderByDesc ? -1 : 1)
 
         return a[this.orderByField] > b[this.orderByField] ? (this.orderByDesc ? 1 : -1) : (this.orderByDesc ? -1 : 1)
 

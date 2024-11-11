@@ -32,7 +32,7 @@ export class EditarDiscursosComponent implements OnInit {
     var startDate = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 7 * 1)).toLocaleDateString('en-CA');
     var endDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 30 * 4)).toLocaleDateString('en-CA');
     var speeches = await this.http.post('speeches_view_fetch', {
-      whereStr: `sacramental_date between '${startDate}' and '${endDate}' and (speech_user_id=${this.http.me.id} or speech_user_id is null)`
+      whereStr: `sacramental_date between '${startDate}' and '${endDate}' and (speech_user_id=${this.http.me.id} or speech_user_id is null) order by sacramental_id, order_num`
     })
 
     for (let speech of speeches) {
@@ -49,7 +49,7 @@ export class EditarDiscursosComponent implements OnInit {
       }
       else {
         this.sacramentais[sacramentalIndex].speeches.push(speech)
-        this.sacramentais[sacramentalIndex].speeches.sort((a: any, b: any) => a.minutes - b.minutes)
+        this.sacramentais[sacramentalIndex].speeches
       }
     }
     this.sacramentais = this.sacramentais.sort((a, b) => a.id - b.id
@@ -72,12 +72,16 @@ export class EditarDiscursosComponent implements OnInit {
       var prevSacramental = this.sacramentais[+event.previousContainer.id.charAt(event.previousContainer.id.length - 1)]
       var currSacramental = this.sacramentais[+event.container.id.charAt(event.container.id.length - 1)]
 
-      if (prevSacramental.id != currSacramental.id) {
+      var i = 1;
+      for (let speech of currSacramental.speeches) {
         await this.http.post('speeches/set', {
-          id: currSacramental.speeches[event.currentIndex].speechId,
-          sacramentalId: currSacramental.id
+          id: speech.speechId,
+          sacramentalId: currSacramental.id,
+          orderNum: i
         });
+        i++;
       }
+
 
 
     }
@@ -94,6 +98,8 @@ export class EditarDiscursosComponent implements OnInit {
 
     ref.afterClosed().subscribe(async membro => {
       try {
+        if (!membro) return;
+
         await this.http.post('speeches/set', { id: speech.speechId, memberId: membro.id });
         speech.memberId = membro.id
         speech.memberName = membro.name

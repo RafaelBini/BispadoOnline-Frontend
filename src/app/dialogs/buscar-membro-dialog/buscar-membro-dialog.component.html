@@ -5,10 +5,10 @@
     <div class="container">
         <table>
             <tr>
-                <td (click)="orderBy('name')">Nome</td>
-                <td (click)="orderBy('lastSpeech')">Ultimo Discurso</td>
-                <td (click)="orderBy('minutes')">Tempo Ult. Disc.</td>
-                <td (click)="orderBy('speechesCount')">Count</td>
+                <td class="sort_td" (click)="orderBy('name')">Nome</td>
+                <td class="sort_td" (click)="orderBy('lastSpeech')">Ultimo Discurso</td>
+                <td class="sort_td" (click)="orderBy('minutes')">Tempo Ult. Disc.</td>
+                <td class="sort_td" (click)="orderBy('speechesCount')">Count</td>
             </tr>
             <tr class="member" (click)="selectMember(membro)" *ngFor="let membro of membros">
                 <td>

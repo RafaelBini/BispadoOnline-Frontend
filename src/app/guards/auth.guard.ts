@@ -25,7 +25,8 @@ export class AuthGuard implements CanActivate {
     }
     catch (reason) {
       //localStorage.removeItem('api_token')
-      this.router.navigate([''])
+      console.log(route)
+      this.router.navigate(["login"], { queryParams: { redirect: route.routeConfig?.path } })
       return false
     }
 

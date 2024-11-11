@@ -47,7 +47,7 @@ export class VisualizarDiscursosComponent implements OnInit {
     this.loading = true
     try {
       this.speeches = await this.http.post('speeches_view_fetch', {
-        whereStr: `sacramental_id = '${this.domingoSelecionado}' and speech_User_Id='${this.http.me.id}' order by minutes asc`
+        whereStr: `sacramental_id = '${this.domingoSelecionado}' and speech_User_Id='${this.http.me.id}' order by order_num asc`
       })
     }
     catch (ex) {

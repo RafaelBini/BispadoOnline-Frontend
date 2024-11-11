@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
@@ -10,18 +10,27 @@ import { HttpService } from 'src/app/services/http.service';
 })
 export class LoginComponent implements OnInit {
 
-  email: string = '';
+  email: string = 'rfabini1996@gmail.com';
   emailSent = false;
   token = '';
 
   constructor(
     private http: HttpService,
     private snack: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
+  private redirect: string = '';
 
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe(p => {
+      if (p.get('redirect') != null) {
+        this.redirect = '/' + p.get('redirect')!;
+
+      }
+
+    })
   }
 
   async sendEmailToken() {
@@ -44,7 +53,7 @@ export class LoginComponent implements OnInit {
 
       if (result.jwt_token) {
         localStorage.setItem('api_token', result.jwt_token);
-        this.router.navigate(['main']);
+        this.router.navigate([this.redirect]);
       }
     }
     catch (ex) {

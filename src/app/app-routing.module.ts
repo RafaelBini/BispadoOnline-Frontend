@@ -7,7 +7,8 @@ import { EditarDiscursosComponent } from './pages/discursos/editar-discursos/edi
 import { VisualizarDiscursosComponent } from './pages/discursos/visualizar-discursos/visualizar-discursos.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
+  { path: '', component: MainPageComponent, canActivate: [AuthGuard] },
   { path: 'main', component: MainPageComponent, canActivate: [AuthGuard] },
   { path: 'discursos/editar', component: EditarDiscursosComponent, canActivate: [AuthGuard] },
   { path: 'discursos', component: VisualizarDiscursosComponent, canActivate: [AuthGuard] }
