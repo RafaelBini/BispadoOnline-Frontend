@@ -43,6 +43,7 @@ import { MemberNamePipe } from './pipes/member-name.pipe';
 import { FullDatePipe } from './pipes/full-date.pipe';
 import { CarregarDadosMembrosDialogComponent } from './dialogs/carregar-dados-membros-dialog/carregar-dados-membros-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { HeaderComponent } from './parts/header/header.component';
 
 
 const MATERIAL_MODULES = [
@@ -69,7 +70,8 @@ const CDK_MODULES = [
     MemberNamePipe,
     FullDatePipe,
     CarregarDadosMembrosDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

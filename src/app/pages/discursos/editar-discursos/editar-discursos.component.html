@@ -1,4 +1,4 @@
-<div>
+<div cdkDropListGroup>
     <div *ngFor="let sacramental of sacramentais" class="sacramental"
         [class.sacramental_hoje]="isCurrentSacramental(sacramental)">
         <div>
@@ -15,8 +15,10 @@
             </button>
         </div>
 
-        <div *ngIf="sacramental.speeches.length > 0">
-            <div *ngFor="let speech of sacramental.speeches; index as speechIndex" class="speech">
+        <div *ngIf="sacramental.speeches.length > 0" cdkDropList [cdkDropListData]="sacramental.speeches"
+            (cdkDropListDropped)="drop($event)" style="min-height: 100px;">
+
+            <div *ngFor="let speech of sacramental.speeches; index as speechIndex" class="speech" cdkDrag>
 
                 <mat-checkbox [(ngModel)]="speech.isWildCard" (change)="updateSpeech(speech,'isWildCard')">
                     {{speech.isWildCard ? 'Especial:' : 'Discursante:'}}

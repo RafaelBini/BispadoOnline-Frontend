@@ -1,4 +1,4 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -54,6 +54,37 @@ export class EditarDiscursosComponent implements OnInit {
     }
     this.sacramentais = this.sacramentais.sort((a, b) => a.id - b.id
     );
+  }
+
+  async drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+    try {
+
+      var prevSacramental = this.sacramentais[+event.previousContainer.id.charAt(event.previousContainer.id.length - 1)]
+      var currSacramental = this.sacramentais[+event.container.id.charAt(event.container.id.length - 1)]
+
+      if (prevSacramental.id != currSacramental.id) {
+        await this.http.post('speeches/set', {
+          id: currSacramental.speeches[event.currentIndex].speechId,
+          sacramentalId: currSacramental.id
+        });
+      }
+
+
+    }
+    catch (ex) {
+      this.snack.open('Falha ao salvar alteraão', undefined, { duration: 5500 })
+      console.log(ex)
+    }
   }
 
   buscarMembro(speech: any) {

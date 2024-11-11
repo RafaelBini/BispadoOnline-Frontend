@@ -1,12 +1,16 @@
+<app-header></app-header>
+
 <div class="main">
-    <div>
+    <div class="container">
         <input type="text" [(ngModel)]="email" placeholder="Seu e-mail" />
-        <button (click)="sendEmailToken()">Envie-me o token!!</button>
+        <button mat-button (click)="sendEmailToken()">Envie-me o token!!</button>
 
     </div>
 
-    <div *ngIf="emailSent">
+    <div class="container" *ngIf="emailSent">
+        <hr>
         <input type="text" [(ngModel)]="token" placeholder="Digite o token aqui">
-        <button *ngIf="token" (click)="enter()">Entrar</button>
+        <button mat-button *ngIf="token" (click)="enter()">Entrar</button>
     </div>
+
 </div>
