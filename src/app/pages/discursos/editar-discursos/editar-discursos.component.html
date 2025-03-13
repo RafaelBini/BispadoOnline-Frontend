@@ -1,3 +1,6 @@
+<div class="top_button">
+    <button mat-button (click)="loadPreviousMeetings()">Carregar Sacramentais anteriores</button>
+</div>
 <div cdkDropListGroup>
     <div *ngFor="let sacramental of sacramentais" class="sacramental"
         [class.sacramental_hoje]="isCurrentSacramental(sacramental)">

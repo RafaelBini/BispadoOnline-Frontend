@@ -22,6 +22,7 @@ export class EditarDiscursosComponent implements OnInit {
 
   sacramentais: any[] = []
   currentSunday = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * (7 - new Date().getDay()))).toDateString();
+  numReunioesAnteriores = 1;
 
   async ngOnInit() {
     await this.loadSacramentais();
@@ -29,7 +30,7 @@ export class EditarDiscursosComponent implements OnInit {
 
   async loadSacramentais() {
     this.sacramentais = []
-    var startDate = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 7 * 1)).toLocaleDateString('en-CA');
+    var startDate = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 7 * this.numReunioesAnteriores)).toLocaleDateString('en-CA');
     var endDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 30 * 4)).toLocaleDateString('en-CA');
     var speeches = await this.http.post('speeches_view_fetch', {
       whereStr: `sacramental_date between '${startDate}' and '${endDate}' and (speech_user_id=${this.http.me.id} or speech_user_id is null) order by sacramental_id, order_num`
@@ -54,6 +55,11 @@ export class EditarDiscursosComponent implements OnInit {
     }
     this.sacramentais = this.sacramentais.sort((a, b) => a.id - b.id
     );
+  }
+
+  loadPreviousMeetings() {
+    this.numReunioesAnteriores += 5
+    this.loadSacramentais();
   }
 
   async drop(event: CdkDragDrop<string[]>) {
