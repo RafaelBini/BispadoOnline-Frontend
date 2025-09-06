@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HttpService } from 'src/app/services/http.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -13,6 +14,7 @@ export class BuscarMembroDialogComponent implements OnInit {
   constructor(
     private db: HttpService,
     public dialogRef: MatDialogRef<BuscarMembroDialogComponent>,
+    private dialog: MatDialog
     //@Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -21,6 +23,7 @@ export class BuscarMembroDialogComponent implements OnInit {
   membros: any[] = []
   orderByField = 'lastSpeech'
   orderByDesc = true
+  archiveMode = false
 
   async ngOnInit() {
     this.membrosFixed = await this.db.post('detailed_members_view/fetch', { whereStr: `` })
@@ -56,7 +59,31 @@ export class BuscarMembroDialogComponent implements OnInit {
   }
 
   selectMember(membro: any) {
-    this.dialogRef.close(membro)
+    if (this.archiveMode) {
+      var ref = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          isDanger: true,
+          title: `Arquivar (deletar) ${membro.name}`,
+          content: 'Voce tem certeza de que deseja arquivar este membro?'
+        }
+      })
+      ref.afterClosed().subscribe(async confirmed => {
+        if (confirmed) {
+
+          try {
+            await this.db.post('members/set', { id: membro.id, archived: 'true' });
+            this.membros = this.membros.filter(m => m.id != membro.id);
+          }
+          catch (ex) {
+            console.log(ex)
+          }
+        }
+      })
+    }
+    else {
+      this.dialogRef.close(membro)
+    }
+
   }
 
   orderBy(field: string) {

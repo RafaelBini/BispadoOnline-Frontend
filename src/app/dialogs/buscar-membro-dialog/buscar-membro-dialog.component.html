@@ -1,4 +1,7 @@
 <div>
+    <button mat-button (click)="archiveMode=!archiveMode">
+        <mat-icon>archive</mat-icon>
+    </button>
     <div>
         <input type="text" [(ngModel)]="term" (ngModelChange)="reload()" />
     </div>
@@ -10,7 +13,8 @@
                 <td class="sort_td" (click)="orderBy('minutes')">Tempo Ult. Disc.</td>
                 <td class="sort_td" (click)="orderBy('speechesCount')">Count</td>
             </tr>
-            <tr class="member" (click)="selectMember(membro)" *ngFor="let membro of membros">
+            <tr class="member" (click)="selectMember(membro)" [class.dangerMode]="archiveMode"
+                *ngFor="let membro of membros">
                 <td>
                     {{membro.name | memberName}} ({{membro.age}})
                 </td>
