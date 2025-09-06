@@ -140,7 +140,7 @@ export class EditarDiscursosComponent implements OnInit {
     })
   }
 
-  addDefault(sacramental: any) {
+  async addDefault(sacramental: any) {
 
     if (sacramental.sundayOfTheMonth == 1) {
       this.addBlankSpeech(sacramental)
@@ -148,11 +148,11 @@ export class EditarDiscursosComponent implements OnInit {
     }
 
     for (var i = 1; i <= 3; i++) {
-      this.addBlankSpeech(sacramental, (i * 5))
+      await this.addBlankSpeech(sacramental, (i * 5), i)
     }
   }
 
-  async addBlankSpeech(sacramental: any, minutes: number | null = null) {
+  async addBlankSpeech(sacramental: any, minutes: number | null = null, orderNum: number = 1) {
     var speech = {
       isWildCard: false,
       memberId: null,
@@ -160,7 +160,8 @@ export class EditarDiscursosComponent implements OnInit {
       minutes: minutes,
       reference: null,
       sacramentalId: sacramental.id,
-      messageCopied: false
+      messageCopied: false,
+      orderNum
     }
     try {
       var result = await this.http.post('speeches/add', speech);
