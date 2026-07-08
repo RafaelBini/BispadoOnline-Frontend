@@ -18,8 +18,17 @@
     <div class="container">
         <div class="discurso" *ngFor="let discurso of speeches">
             <div>
+
                 <div *ngIf="discurso.isWildCard"> <b> {{discurso.wildText}} </b></div>
-                <div *ngIf="!discurso.isWildCard"> <b> {{discurso.memberName | memberName}} </b></div>
+                <div *ngIf="!discurso.isWildCard" style="display: flex; align-items: center;">
+                    <b> {{discurso.memberName | memberName}} </b>
+                    <mat-icon *ngIf="discurso.approved" style="color: lightgreen; margin-left: 5px;">
+                        verified_user
+                    </mat-icon>
+                    <mat-icon *ngIf="!discurso.approved" style="color: orangered; margin-left: 5px;">
+                        lock
+                    </mat-icon>
+                </div>
                 <div *ngIf="discurso.topic">Tema: {{discurso.topic}}</div>
                 <div *ngIf="discurso.minutes">Tempo: {{discurso.minutes}} min</div>
             </div>

@@ -60,12 +60,23 @@ export class VisualizarDiscursosComponent implements OnInit {
   }
 
   notifyCopy(speech: any) {
-    speech.messageCopied = true;
-    this.snack.open('Copiado!', undefined, { duration: 3400 })
+    if (speech.approved) {
+      speech.messageCopied = true;
+      this.snack.open('Copiado!', undefined, { duration: 3400 })
+    }
+    else {
+      this.snack.open('Esse discurso ainda não foi aprovado pelo Bispo', undefined, { duration: 6400 })
+    }
   }
 
   getInviteText(speech: any) {
-    return `Olá Irmão(ã) ${speech.isWildCard ? speech.wildText : speech.memberName},\n\nEm espírito de oração, o bispado da Ala Parque da Fonte ponderou o seu nome para discursar na reunião sacramental no dia *${this.customDatePipe.transform(speech.sacramentalDate)}*.\n\nAbaixo estão os detalhes do discurso:\n\nTema: *${speech.topic}* ${speech.reference ? `\n\nReferência: ${speech.reference}` : ''}\n\nDuração: *${speech.minutes} minutos*\n\n*Importante: Lembre-se de assentar-se ao púlpito antes de discursar\n\nVocê aceita o convite?`;
+    if (speech.approved) {
+      return `Olá Irmão(ã) ${speech.isWildCard ? speech.wildText : speech.memberName},\n\nEm espírito de oração, o bispado da Ala Parque da Fonte ponderou o seu nome para discursar na reunião sacramental no dia *${this.customDatePipe.transform(speech.sacramentalDate)}*.\n\nAbaixo estão os detalhes do discurso:\n\nTema: *${speech.topic}* ${speech.reference ? `\n\nReferência: ${speech.reference}` : ''}\n\nDuração: *${speech.minutes} minutos*\n\n*Importante: Lembre-se de assentar-se ao púlpito antes de discursar\n\nVocê aceita o convite?`;
+    }
+    else {
+      return "";
+    }
+
   }
 
 }

@@ -4,7 +4,7 @@
 <div cdkDropListGroup>
     <div *ngFor="let sacramental of sacramentais" class="sacramental"
         [class.sacramental_hoje]="isCurrentSacramental(sacramental)">
-        <div>
+        <div (dblclick)="approve(sacramental)">
             <h2>
                 {{sacramental.date | customDate}} - <span style="color: gray;">{{sacramental.sundayOfTheMonth}}º
                     Domingo<span *ngIf="sacramental.sundayOfTheMonth == 1"> - TESTEMUNHOS</span></span>
@@ -38,7 +38,7 @@
                         (change)="updateSpeech(speech,'wildText')" [(ngModel)]="speech.wildText" />
                 </span>
 
-                <input type="text" placeholder="Tema" (change)="updateSpeech(speech,'topic')"
+                <input type="text" placeholder="Tema" maxlength="40" (change)="updateSpeech(speech,'topic')"
                     [(ngModel)]="speech.topic" />
                 <input type="text" placeholder="Referencia" (change)="updateSpeech(speech,'reference')"
                     [(ngModel)]="speech.reference" />

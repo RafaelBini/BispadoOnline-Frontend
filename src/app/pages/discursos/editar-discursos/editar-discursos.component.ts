@@ -97,6 +97,15 @@ export class EditarDiscursosComponent implements OnInit {
     }
   }
 
+  approve(sacramental: any) {
+
+    sacramental.speeches.forEach(async (speech: any) => {
+      await this.http.post('speeches/set', { id: speech.speechId, approved: true });
+    });
+
+    this.snack.open('Discursos aprovados!', undefined, { duration: 5500 })
+  }
+
   buscarMembro(speech: any) {
     var ref = this.dialog.open(BuscarMembroDialogComponent, {
 
@@ -106,7 +115,7 @@ export class EditarDiscursosComponent implements OnInit {
       try {
         if (!membro) return;
 
-        await this.http.post('speeches/set', { id: speech.speechId, memberId: membro.id });
+        await this.http.post('speeches/set', { id: speech.speechId, memberId: membro.id, approved: false });
         speech.memberId = membro.id
         speech.memberName = membro.name
       }
