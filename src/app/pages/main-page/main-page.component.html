@@ -1,8 +1,40 @@
-<br>
-<button routerLink="/discursos">Visualizar Discursantes da Semana</button>
-<br>
-<br>
-<button routerLink="/discursos/editar">Editar Discursantes</button>
-<br>
-<br>
-<button (click)="loadMemberData()">Carregar dados de membros</button>
+<app-header></app-header>
+
+<div class="page">
+  <div class="menu">
+    <p class="subtitle">Escolha uma ação para continuar</p>
+
+    <button class="action" routerLink="/discursos" type="button">
+      <span class="icon-wrap">
+        <mat-icon>visibility</mat-icon>
+      </span>
+      <span class="action-text">
+        <span class="action-title">Visualizar Discursantes</span>
+        <span class="action-desc">Veja os discursantes da semana</span>
+      </span>
+      <mat-icon class="chevron">chevron_right</mat-icon>
+    </button>
+
+    <button class="action" routerLink="/discursos/editar" type="button">
+      <span class="icon-wrap">
+        <mat-icon>edit</mat-icon>
+      </span>
+      <span class="action-text">
+        <span class="action-title">Editar Discursantes</span>
+        <span class="action-desc">Organize e atualize as sacramentais</span>
+      </span>
+      <mat-icon class="chevron">chevron_right</mat-icon>
+    </button>
+
+    <button class="action" type="button" (click)="loadMemberData()">
+      <span class="icon-wrap muted">
+        <mat-icon>group</mat-icon>
+      </span>
+      <span class="action-text">
+        <span class="action-title">Carregar dados de membros</span>
+        <span class="action-desc">Atualize a lista de membros da ala</span>
+      </span>
+      <mat-icon class="chevron">chevron_right</mat-icon>
+    </button>
+  </div>
+</div>
