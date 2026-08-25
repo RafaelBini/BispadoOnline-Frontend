@@ -1,0 +1,12 @@
+<h2>Google Drive</h2>
+<p>Para atualizar a ata sacramental, faça login com a conta que tem acesso à pasta de Reuniões Sacramentais.</p>
+
+<button mat-raised-button color="primary" (click)="login()" [disabled]="isLoading">
+  Entrar com Google
+</button>
+<button mat-button (click)="cancel()" [disabled]="isLoading">Cancelar</button>
+
+<div class="status">
+  <mat-spinner *ngIf="isLoading" diameter="32"></mat-spinner>
+  <p *ngIf="error" class="error">{{ error }}</p>
+</div>

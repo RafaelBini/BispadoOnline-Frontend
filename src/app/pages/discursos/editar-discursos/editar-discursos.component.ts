@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { BuscarMembroDialogComponent } from 'src/app/dialogs/buscar-membro-dialog/buscar-membro-dialog.component';
 import { ConfirmDialogComponent } from 'src/app/dialogs/confirm-dialog/confirm-dialog.component';
 import { HttpService } from 'src/app/services/http.service';
+import { GoogleDriveAuthService, GoogleDriveTokens } from 'src/app/services/google-drive-auth.service';
 
 @Component({
   selector: 'app-editar-discursos',
@@ -17,12 +18,16 @@ export class EditarDiscursosComponent implements OnInit {
   constructor(
     private http: HttpService,
     private dialog: MatDialog,
-    private snack: MatSnackBar
+    private snack: MatSnackBar,
+    private googleAuth: GoogleDriveAuthService
   ) { }
 
   sacramentais: any[] = []
   currentSunday = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * (7 - new Date().getDay()))).toDateString();
   numReunioesAnteriores = 1;
+  private approveClickCount = 0;
+  private approveClickTimer: ReturnType<typeof setTimeout> | null = null;
+  private approveClickSacramentalId: string | number | null = null;
 
   async ngOnInit() {
     await this.loadSacramentais();
@@ -97,13 +102,106 @@ export class EditarDiscursosComponent implements OnInit {
     }
   }
 
-  approve(sacramental: any) {
+  onSacramentalTitleClick(sacramental: any) {
+    if (this.approveClickSacramentalId !== sacramental.id) {
+      this.approveClickCount = 0;
+      this.approveClickSacramentalId = sacramental.id;
+    }
 
-    sacramental.speeches.forEach(async (speech: any) => {
-      await this.http.post('speeches/set', { id: speech.speechId, approved: true });
-    });
+    this.approveClickCount++;
 
-    this.snack.open('Discursos aprovados!', undefined, { duration: 5500 })
+    if (this.approveClickTimer) {
+      clearTimeout(this.approveClickTimer);
+    }
+
+    this.approveClickTimer = setTimeout(() => {
+      this.approveClickCount = 0;
+      this.approveClickSacramentalId = null;
+      this.approveClickTimer = null;
+    }, 600);
+
+    if (this.approveClickCount >= 3) {
+      if (this.approveClickTimer) {
+        clearTimeout(this.approveClickTimer);
+      }
+      this.approveClickCount = 0;
+      this.approveClickSacramentalId = null;
+      this.approveClickTimer = null;
+      this.approve(sacramental);
+    }
+  }
+
+  async approve(sacramental: any) {
+    try {
+      for (const speech of sacramental.speeches) {
+        await this.http.post('speeches/set', { id: speech.speechId, approved: true });
+        speech.approved = true;
+      }
+
+      const sortedSpeeches = [...sacramental.speeches].sort((a, b) => (a.orderNum || 0) - (b.orderNum || 0));
+      const speakerName = (speech: any) => {
+        if (!speech) return '';
+        return speech.isWildCard ? (speech.wildText || '').trim() : (speech.memberName || '').trim();
+      };
+
+      const sacramentalDate = new Date(sacramental.date).toLocaleDateString('en-CA');
+      const name1 = speakerName(sortedSpeeches[0]);
+
+      if (!name1) {
+        this.snack.open('Discursos aprovados! Informe o nome do 1º discursante para atualizar a ata.', undefined, { duration: 6500 });
+        return;
+      }
+
+      let tokens: GoogleDriveTokens;
+      try {
+        tokens = await this.googleAuth.ensureAuthenticated(false);
+      } catch (authEx: any) {
+        this.snack.open('Discursos aprovados, mas ' + (authEx?.message || 'login do Google Drive é necessário para atualizar a ata.'), undefined, { duration: 7000 });
+        return;
+      }
+
+      try {
+        await this.sendDiscursantesToAta(tokens, sacramentalDate, name1, speakerName(sortedSpeeches[1]), speakerName(sortedSpeeches[2]));
+        this.snack.open('Discursos aprovados e ata sacramental atualizada!', undefined, { duration: 7000 });
+      } catch (ataEx: any) {
+        this.snack.open('Discursos aprovados, mas ' + (ataEx?.message || 'falha ao atualizar a ata no Google Drive.'), undefined, { duration: 7500 });
+      }
+    } catch (ex: any) {
+      console.log(ex);
+      this.snack.open(ex?.message || 'Falha ao aprovar discursos.', undefined, { duration: 6500 });
+    }
+  }
+
+  private async sendDiscursantesToAta(
+    tokens: GoogleDriveTokens,
+    sacramentalDate: string,
+    discursante1: string,
+    discursante2: string,
+    discursante3: string,
+    retried = false
+  ): Promise<void> {
+    try {
+      const result = await this.http.post('add-discursantes-ata', {
+        sacramental_date: sacramentalDate,
+        discursante_1: discursante1,
+        discursante_2: discursante2 || undefined,
+        discursante_3: discursante3 || undefined,
+        googleAccessToken: tokens.access_token,
+        googleRefreshToken: tokens.refresh_token,
+      });
+
+      if (result.refreshedTokens) {
+        this.googleAuth.saveTokens(result.refreshedTokens);
+      }
+    } catch (ex: any) {
+      const body = ex?.error;
+      if (body?.googleAuthRequired && !retried) {
+        this.googleAuth.clearTokens();
+        const newTokens = await this.googleAuth.ensureAuthenticated(true);
+        return this.sendDiscursantesToAta(newTokens, sacramentalDate, discursante1, discursante2, discursante3, true);
+      }
+      throw new Error(body?.message || body?.msg || 'falha ao atualizar a ata no Google Drive.');
+    }
   }
 
   buscarMembro(speech: any) {
@@ -118,6 +216,7 @@ export class EditarDiscursosComponent implements OnInit {
         await this.http.post('speeches/set', { id: speech.speechId, memberId: membro.id, approved: false });
         speech.memberId = membro.id
         speech.memberName = membro.name
+        speech.approved = false
       }
       catch (ex) {
         this.snack.open('Falha ao alterar discursante', undefined, { duration: 3500 })
@@ -205,6 +304,11 @@ export class EditarDiscursosComponent implements OnInit {
   isCurrentSacramental(sacramental: any) {
 
     return new Date(sacramental.date).toDateString() == this.currentSunday;
+  }
+
+  isSacramentalApproved(sacramental: any) {
+    if (!sacramental.speeches?.length) return false;
+    return sacramental.speeches.every((speech: any) => speech.approved === true);
   }
 
 }

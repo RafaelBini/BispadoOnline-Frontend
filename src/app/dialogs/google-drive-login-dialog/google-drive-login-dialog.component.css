@@ -1,0 +1,12 @@
+.status {
+  margin-top: 16px;
+  min-height: 40px;
+}
+
+.error {
+  color: #c62828;
+}
+
+button {
+  margin-right: 8px;
+}

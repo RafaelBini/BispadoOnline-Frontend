@@ -35,6 +35,27 @@ input[type=text] {
     background-color: rgb(245, 243, 165);
 }
 
+.sacramental_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.approval_icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+}
+
+.approval_icon--ok {
+    color: lightgreen;
+}
+
+.approval_icon--pending {
+    color: orangered;
+}
+
 .cdk-drag-preview {
     box-sizing: border-box;
     border-radius: 4px;

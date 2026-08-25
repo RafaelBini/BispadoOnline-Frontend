@@ -4,11 +4,20 @@
 <div cdkDropListGroup>
     <div *ngFor="let sacramental of sacramentais" class="sacramental"
         [class.sacramental_hoje]="isCurrentSacramental(sacramental)">
-        <div (dblclick)="approve(sacramental)">
-            <h2>
-                {{sacramental.date | customDate}} - <span style="color: gray;">{{sacramental.sundayOfTheMonth}}º
-                    Domingo<span *ngIf="sacramental.sundayOfTheMonth == 1"> - TESTEMUNHOS</span></span>
-
+        <div (click)="onSacramentalTitleClick(sacramental)">
+            <h2 class="sacramental_title">
+                <span>
+                    {{sacramental.date | customDate}} - <span style="color: gray;">{{sacramental.sundayOfTheMonth}}º
+                        Domingo<span *ngIf="sacramental.sundayOfTheMonth == 1"> - TESTEMUNHOS</span></span>
+                </span>
+                <mat-icon *ngIf="isSacramentalApproved(sacramental)" class="approval_icon approval_icon--ok"
+                    matTooltip="Discursantes autorizados">
+                    verified_user
+                </mat-icon>
+                <mat-icon *ngIf="!isSacramentalApproved(sacramental)" class="approval_icon approval_icon--pending"
+                    matTooltip="Discursantes ainda não autorizados">
+                    lock
+                </mat-icon>
             </h2>
         </div>
 

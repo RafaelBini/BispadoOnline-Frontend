@@ -43,6 +43,7 @@ import { MemberNamePipe } from './pipes/member-name.pipe';
 import { FullDatePipe } from './pipes/full-date.pipe';
 import { CarregarDadosMembrosDialogComponent } from './dialogs/carregar-dados-membros-dialog/carregar-dados-membros-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { GoogleDriveLoginDialogComponent } from './dialogs/google-drive-login-dialog/google-drive-login-dialog.component';
 import { HeaderComponent } from './parts/header/header.component';
 
 
@@ -71,6 +72,7 @@ const CDK_MODULES = [
     FullDatePipe,
     CarregarDadosMembrosDialogComponent,
     ConfirmDialogComponent,
+    GoogleDriveLoginDialogComponent,
     HeaderComponent
   ],
   imports: [
